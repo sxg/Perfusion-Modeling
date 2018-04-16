@@ -5,22 +5,17 @@ import numpy as np
 def signal_to_contrast(signal, acquisition_data):
     """Convert signal intensity to contrast concentration."""
     alpha = np.asscalar(np.asscalar(acquisition_data["flipAngle"])) * np.pi / 180
-    t10liver = np.asscalar(np.asscalar(acquisition_data["T10l"])) * 1000
-    r10liver = 1 / t10liver
+    t_10_liver = np.asscalar(np.asscalar(acquisition_data["T10l"])) * 1000
     rep_time = np.asscalar(np.asscalar(acquisition_data["TR"]))
     relaxivity = np.asscalar(np.asscalar(acquisition_data["relaxivity"]))
+    scale_factor = np.asscalar(np.asscalar(acquisition_data["scaleFactor"]))
+
     start_frame = np.asscalar(np.asscalar(acquisition_data["startFrame"])) - 1
     add_frames = np.asscalar(np.asscalar(acquisition_data["addFrames"]))
     stop_frame = start_frame + add_frames + 1
-    scale_factor = np.asscalar(np.asscalar(acquisition_data["scaleFactor"]))
+    m_0 = np.mean(signal[start_frame:stop_frame])
 
-    s0liver = np.mean(signal[start_frame:stop_frame]) \
-        * (1 - np.exp(-r10liver * rep_time) * np.cos(alpha)) \
-        / (1 - np.exp(-r10liver * rep_time)) / np.sin(alpha)
-    r1liver = np.absolute(np.log(np.divide((s0liver * np.sin(alpha) \
-        - np.multiply(signal, np.cos(alpha))) \
-        , (s0liver * np.sin(alpha) - signal))) / rep_time)
-    contrast = (r1liver - r10liver) * 1000 / relaxivity
+    contrast = _signal_to_contrast(signal, m_0, alpha, t_10_liver, tr, relaxivity)
     contrast *= scale_factor
     return contrast
 
