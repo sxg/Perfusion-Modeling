@@ -72,4 +72,14 @@ def pv_signal_to_contrast(acquisition_data):
     art_contrast = (r1pv - r10pv) * 1000 / relaxivity
     art_contrast = art_contrast / (1 - hematocrit)
     return art_contrast
-   
+
+def _signal_to_contrast(signal, m_0, alpha, t_10, tr, relaxivity):
+    r_10 = 1 / t_10
+    m = m_0 \
+        * (1 - np.exp(-r_10 * tr) * np.cos(alpha)) \
+        / (1 - np.exp(-r_10 * tr)) / np.sin(alpha)
+    r_1 = np.log(np.divide((m * np.sin(alpha) \
+        - np.multiply(signal, np.cos(alpha))) \
+        , (m * np.sin(alpha) - signal))) / tr
+    contrast = (r_1 - r_10) * 1000 / relaxivity
+    return contrast
