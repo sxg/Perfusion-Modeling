@@ -30,22 +30,17 @@ def art_signal_to_contrast(acquisition_data):
     art_signal = np.abs(allts[:, 1])
     pv_signal = np.abs(allts[:, 2])
     alpha = np.asscalar(np.asscalar(acquisition_data["flipAngle"])) * np.pi / 180
-    t10a = np.asscalar(np.asscalar(acquisition_data["T10b"])) * 1000
-    r10a = 1 / t10a
-    rep_time = np.asscalar(np.asscalar(acquisition_data["TR"]))
+    t_10_a = np.asscalar(np.asscalar(acquisition_data["T10b"])) * 1000
+    tr = np.asscalar(np.asscalar(acquisition_data["TR"]))
     relaxivity = np.asscalar(np.asscalar(acquisition_data["relaxivity"]))
+    hematocrit = 0.4
+
     start_frame = np.asscalar(np.asscalar(acquisition_data["startFrame"])) - 1
     add_frames = np.asscalar(np.asscalar(acquisition_data["addFrames"]))
     stop_frame = start_frame + add_frames + 1
-    hematocrit = 0.4
+    m_0 = np.mean(pv_signal[start_frame:stop_frame])
 
-    s0a = np.mean(pv_signal[start_frame:stop_frame]) \
-        * (1 - np.exp(-r10a * rep_time) * np.cos(alpha)) \
-        / (1 - np.exp(-r10a * rep_time)) / np.sin(alpha)
-    r1a = np.log(np.divide((s0a * np.sin(alpha) \
-        - np.multiply(art_signal, np.cos(alpha))) \
-        , (s0a * np.sin(alpha) - art_signal))) / rep_time
-    art_contrast = (r1a - r10a) * 1000 / relaxivity
+    art_contrast = _signal_to_contrast(art_signal, m_0, alpha, t_10_a, tr, relaxivity)
     art_contrast = art_contrast / (1 - hematocrit)
     return art_contrast
 
