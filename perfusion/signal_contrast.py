@@ -6,7 +6,7 @@ def signal_to_contrast(signal, acquisition_data):
     """Convert signal intensity to contrast concentration."""
     alpha = np.asscalar(np.asscalar(acquisition_data["flipAngle"])) * np.pi / 180
     t_10_liver = np.asscalar(np.asscalar(acquisition_data["T10l"])) * 1000
-    rep_time = np.asscalar(np.asscalar(acquisition_data["TR"]))
+    tr = np.asscalar(np.asscalar(acquisition_data["TR"]))
     relaxivity = np.asscalar(np.asscalar(acquisition_data["relaxivity"]))
     scale_factor = np.asscalar(np.asscalar(acquisition_data["scaleFactor"]))
 
