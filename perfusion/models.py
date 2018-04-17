@@ -3,8 +3,8 @@
 import numpy as np
 
 def disc(times, art_contrast, pv_contrast, af, dv, mtt, tau_a, tau_p):
-    """Calculates contrast concentration in liver tissue using the dual-input 
-    single-compartment model for describing liver perfusion.
+    """Calculates contrast concentration in liver tissue using the dual-input
+     single-compartment model for describing liver perfusion.
     """
 
     k_1a = af * dv / mtt
@@ -15,7 +15,7 @@ def disc(times, art_contrast, pv_contrast, af, dv, mtt, tau_a, tau_p):
     contrast = np.zeros(times.size)
 
     for i in range(0, contrast.size):
-        sum = 0
+        cum_sum = 0
         for t in range(0, i + 1):
             sum_a, sum_p = 0, 0
             t_a_delayed = np.around(t - tau_a)
@@ -24,10 +24,7 @@ def disc(times, art_contrast, pv_contrast, af, dv, mtt, tau_a, tau_p):
                 sum_a = k_1a * art_contrast[t_a_delayed]
             if 0 <= t_p_delayed < pv_contrast.size:
                 sum_p = k_1p * pv_contrast[t_p_delayed]
-            sum += (sum_a + sum_p) * (np.exp(-k_2 * (i - t) * dt) * dt)
-            # print(str(sum_a) + " " + str(sum_p) + " " + str(np.exp(-k_2 * (i - t) * dt) * dt))
-            # print("Vars: " + str(k_2) + " " + str(i) + " " + str(t) + " " + str(dt))
-        # print("Sum: " + str(sum))
-        contrast[i] = sum
-    
+            cum_sum += (sum_a + sum_p) * (np.exp(-k_2 * (i - t) * dt) * dt)
+        contrast[i] = cum_sum
+
     return contrast
