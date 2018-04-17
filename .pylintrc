@@ -1,3 +1,7 @@
 [MASTER]
 
-good-names=m,tr
+good-names=m,tr,af,dv,dt,i,j,k,t
+
+[MESSAGES-CONTROL]
+
+disable=R0913
