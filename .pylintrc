@@ -1,7 +1,3 @@
-[MASTER]
-
-good-names=m,tr,af,dv,dt,d,i,j,k,t,B,W,Z
-
 [MESSAGES-CONTROL]
 
-disable=R0913
+disable=R0913,R0914,C0103,W0401
