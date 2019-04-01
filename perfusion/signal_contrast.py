@@ -63,8 +63,8 @@ def _signal_to_contrast(signal, m_0, alpha, t_10, tr, relaxivity):
     m = m_0 \
         * (1 - np.exp(-r_10 * tr) * np.cos(alpha)) \
         / (1 - np.exp(-r_10 * tr)) / np.sin(alpha)
-    r_1 = np.log(np.divide((m * np.sin(alpha) \
-        - np.multiply(signal, np.cos(alpha))) \
-        , (m * np.sin(alpha) - signal))) / tr
+    r_1 = np.abs(np.log(np.divide((m * np.sin(alpha) \
+        - (signal * np.cos(alpha))) \
+        , (m * np.sin(alpha) - signal))) / tr)
     contrast = (r_1 - r_10) * 1000 / relaxivity
     return contrast
