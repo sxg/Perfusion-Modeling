@@ -102,3 +102,4 @@ ENV/
 *.mat
 /Sandbox.ipynb
 /.vscode
+*.ipynb
