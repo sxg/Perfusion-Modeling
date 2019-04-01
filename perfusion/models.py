@@ -37,3 +37,22 @@ def disc(xdata, af, dv, mtt, tau_a, tau_p):
     contrast = dt * (f1.sum(1) - 0.5 * (f1[:, 0] + np.diag(f1)))
 
     return contrast
+
+def tofts(xdata, k_trans, k_ep):
+    """Calculate contrast concentration using the standard Tofts model."""
+
+    times = xdata[:, 0]
+    art_contrast = xdata[:, 1]
+
+    dt = times[1] - times[0]
+    t = np.size(times, 0)
+    contrast = np.zeros(times.size)
+
+    for i, _ in enumerate(times):
+        conv = 0
+        for i_prime in range(0, i + 1):
+            conv += k_trans * art_contrast[i_prime] \
+                * np.exp(-(i - i_prime) * dt * k_ep) * dt
+        contrast[i] = conv
+    
+    return contrast
