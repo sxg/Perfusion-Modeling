@@ -37,17 +37,3 @@ def disc(xdata, af, dv, mtt, tau_a, tau_p):
     contrast = dt * (f1.sum(1) - 0.5 * (f1[:, 0] + np.diag(f1)))
 
     return contrast
-
-def disc_fit_wrapper(unfitted_params, fitted_params):
-    """Wrapper for curve fitting to use the disc function.
-    """
-
-    af, dv, mtt, tau_a, tau_p = fitted_params
-    tau_a *= 1000
-    tau_p *= 1000
-    acquisition_data = unfitted_params
-    art_contrast = sc.art_signal_to_contrast(acquisition_data)
-    pv_contrast = sc.pv_signal_to_contrast(acquisition_data)
-    allts = np.asscalar(acquisition_data["allts"])
-    times = allts[:, 0]
-    return disc(times, art_contrast, pv_contrast, af, dv, mtt, tau_a, tau_p)
