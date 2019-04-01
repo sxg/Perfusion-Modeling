@@ -16,8 +16,8 @@ def disc(xdata, af, dv, mtt, tau_a, tau_p):
     k_1a = af * dv / mtt
     k_1p = (1 - af) * dv / mtt
     k_2 = 1 / mtt
-    tau_a = np.rint(tau_a).astype(int)
-    tau_p = np.rint(tau_p).astype(int)
+    tau_a = np.rint(tau_a * 1e10).astype(int)
+    tau_p = np.rint(tau_p * 1e10).astype(int)
 
     dt = times[1] - times[0]
     t = np.size(times, 0)
@@ -45,7 +45,7 @@ def tofts(xdata, k_trans, k_ep, tau):
 
     times = xdata[:, 0]
     art_contrast = xdata[:, 1]
-    tau = np.rint(tau).astype(int)
+    tau = np.rint(tau * 1e8).astype(int)
 
     shifted_art_contrast = art_contrast.copy()
     if tau > 0:
